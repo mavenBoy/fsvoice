@@ -1,10 +1,17 @@
 package fansen.com.fsvoice;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import fansen.com.permission.ManiFestPermission;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -20,6 +27,23 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
         //change password
+        boolean result = ManiFestPermission.checkPermissionGrantedAll(this);
+        Toast.makeText(this,result ? "granted all" : "request mermission", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Log.i(TAG, "onRequestPermissionsResult requestCode.." + requestCode);
+
+        if(permissions != null){
+            int i = 0;
+            for(String item : permissions){
+                Log.i(TAG, "onRequestPermissionsResult .." + item + ", grantResults[i] = " + grantResults[i]);
+                i++;
+            }
+        }
     }
 
     /**
